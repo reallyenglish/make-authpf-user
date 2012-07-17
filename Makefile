@@ -14,7 +14,7 @@ all:	adduser key
 adduser:
 	adduser \
 		-class authpf -group authpf -shell authpf \
-		-batch ${UNAME} authpf "${UNAME} (authpf)"
+		-batch ${UNAME} authpf "${AUTHPF_USER} (authpf)"
 
 key:
 	(sudo -u ${UNAME} /usr/bin/ssh-keygen -N "" -f ${RSA_SECRET_KEY})
@@ -24,8 +24,8 @@ key:
 rmuser:
 	rmuser ${UNAME}
 
-# rmuser all users created MAX_DAYS ago
+# rmuser all users created more than MAX_DAYS ago
 rmusers:
-	for i in `find /home -mtime $$(( ${MAX_DAYS} + 1 )) -maxdepth 1 -name "${UNAME_PREFIX}*" | sed -e 's/^\/home\///'`; do \
+	for i in `find /home -mtime +$$(( ${MAX_DAYS} + 1 )) -maxdepth 1 -name "${UNAME_PREFIX}*" | sed -e 's/^\/home\///'`; do \
 		rmuser $$i; \
 	done
